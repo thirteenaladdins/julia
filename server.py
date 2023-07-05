@@ -57,6 +57,22 @@ async def create_entry(entry: Entry):
         json.dump(data, file, indent=4)
     return new_entry
 
+@app.post("/journal/{entry_date}")
+async def create_entry(entry_date: str, entry: Entry):
+    with open('journal_entries.json', 'r') as file:
+        data = json.load(file)
+        
+        # Check if entry for this date already exists
+        if entry_date in data:
+            return {"message": f"Entry for date {entry_date} already exists"}
+        
+        # If not, create new entry
+        data[entry_date] = entry.dict()['entry']
+        with open('journal_entries.json', 'w') as file:
+            json.dump(data, file, indent=4)
+        return {entry_date: data[entry_date]}
+
+
 @app.put("/journal/{entry_date}")
 async def update_entry(entry_date: str, entry: Entry):
     with open('journal_entries.json', 'r') as file:
