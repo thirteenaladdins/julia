@@ -1,0 +1,42 @@
+start with a character limit of 1000 
+then create a way of commiting the data to the json
+add metadata to each of the files, date, keywords, tags, title, author, summary, emotion, analysis
+
+
+okay so we have a simple interface that allows us to read and write to today's journal entry
+also, add an emotion. that's the basic functionality. 
+
+also allow us to read and edit from previous days
+view a list of data from the past and the future 
+
+okay, what's next? 
+
+read today's entry? 
+now we want to navigate the different entries
+
+now we want to display all the different journal entries, or at least the last five... 
+display last 5 journal entries.
+
+then deploy this online, it might be better just to deploy it straight away. 
+
+
+pip install fastapi
+pip install uvicorn # ASGI server
+pip install starlette # lightweight ASGI framework/toolkit
+pip install pydantic # Data validation and type annotations
+# OR
+pip install fastapi uvicorn starlette pydantic
+
+sentiment analysis - start here, store the sentiment score on the 
+keyword extraction or data modelling
+entity recognition
+trend analysis
+reflection and insight generation
+
+associate themes and sentiments in the same part of the graph
+
+
+sentiment analysis - 
+using a hugging face model, 
+predict the sentiment
+the user can also provide feedback 
