@@ -1,9 +1,13 @@
+
 <script>
 import dayjs from 'dayjs';
 import {
     onMount,
     onDestroy
 } from 'svelte';
+
+const BASE_URL = 'http://localhost:8001';
+const MAX_ENTRY_LENGTH = 1000;
 
 let date = dayjs();
 
@@ -14,7 +18,7 @@ let dates = Array(dayjs(`${year}-${month + 1}`, 'YYYY-MM').daysInMonth())
     .map((_, i) => dayjs(`${year}-${month + 1}-${i + 1}`, 'YYYY-MM-DD'));
 
 let preElement;
-let editable = true;
+// let editable = true;
 let isDirty = false;
 let savedJournalEntry = '';
 let selectedDate;
@@ -30,7 +34,7 @@ async function getJournalEntry(date) {
             return;
         }
 
-        const response = await fetch(`http://localhost:8001/journal/${date}`);
+        const response = await fetch(`${BASE_URL}/journal/${date}`);
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -57,7 +61,7 @@ async function getJournalEntry(date) {
 async function saveJournalEntry() {
     try {
         const entryText = preElement.value;  // Using value property instead of textContent
-        const response = await fetch(`http://localhost:8001/journal/${selectedDate}`, {
+        const response = await fetch(`${BASE_URL}/journal/${selectedDate}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -84,7 +88,7 @@ async function saveJournalEntry() {
 
 async function createJournalEntry(date) {
     try {
-        const response = await fetch(`http://localhost:8001/journal/${date}`, {
+        const response = await fetch(`${BASE_URL}/journal/${date}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -107,28 +111,26 @@ async function createJournalEntry(date) {
     }
 }
 
-async function updateEntry(e) {
-    const currentEntry = document.querySelector('.journal-entry').textContent;
+function updateEntry() {
     if (isDirty) {
         if (confirm('This has been modified but not saved. Are you sure you want to exit without saving?')) {
             journalEntry = savedJournalEntry;
-            preElement.textContent = savedJournalEntry;
         } else {
             return;
         }
     }
-    savedJournalEntry = currentEntry;
+    savedJournalEntry = journalEntry;
     isDirty = false;
 }
 
-function onInput(e) {
-    isDirty = e.target.value !== savedJournalEntry;
-    if (e.target.value.length > 1000) {
-        e.target.value = e.target.value.substring(0, 1000);
-    } else {
-        journalEntry = e.target.value; // Update journalEntry with the current content.
+
+function onInput() {
+    isDirty = journalEntry !== savedJournalEntry;
+    if (journalEntry.length > MAX_ENTRY_LENGTH) {
+        journalEntry = journalEntry.substring(0, MAX_ENTRY_LENGTH);
     }
 }
+
 
 let onKeyUpHandler = (e) => {
     if (e.key === 'Escape') {
