@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import json
+import uvicorn
 from datetime import date
 import os
 
@@ -9,7 +10,7 @@ app = FastAPI()
 
 # Configure CORS settings
 origins = [
-    "http://localhost:8080",  # Allow Svelte app to access the API.
+    "http://localhost:5173",  # Allow Svelte app to access the API.
     # Add any other origins that need to access the API.
     # "*" would mean all origins are allowed but it's not recommended for security reasons.
 ]
@@ -86,4 +87,5 @@ async def update_entry(entry_date: str, entry: Entry):
             return {"message": f"No entry found for date {entry_date}"}
 
 if __name__ == "__main__":
-    os.system("uvicorn server:app --host 0.0.0.0 --port 8001 --reload")
+    # os.system("uvicorn server:app --host 0.0.0.0 --port 8001 --reload")
+    uvicorn.run("server:app", host="0.0.0.0", port=8001, reload=True)

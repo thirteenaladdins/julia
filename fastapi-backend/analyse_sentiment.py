@@ -28,6 +28,7 @@ def read_entry():
 
 text = read_entry()
 # text = 'This is amazing, I love it. GREAT!.'
+# text = 'absolutely hated it. worst film ever'
 
 # inputs = tokenizer.encode_plus(text, return_tensors='pt')
 

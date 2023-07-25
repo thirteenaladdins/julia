@@ -3,8 +3,11 @@
 import dayjs from 'dayjs';
 import {
     onMount,
-    onDestroy
+    onDestroy, 
 } from 'svelte';
+
+import { goto } from '$app/navigation';
+
 
 const BASE_URL = 'http://localhost:8001';
 const MAX_ENTRY_LENGTH = 1000;
@@ -139,12 +142,17 @@ let onKeyUpHandler = (e) => {
 };
 
 onMount(() => {
-    window.addEventListener('keyup', onKeyUpHandler);
+    if (typeof window !== 'undefined') {
+        window.addEventListener('keyup', onKeyUpHandler);
+    }
 });
 
 onDestroy(() => {
-    window.removeEventListener('keyup', onKeyUpHandler);
+    if (typeof window !== 'undefined') {
+        window.removeEventListener('keyup', onKeyUpHandler);
+    }
 });
+
 </script>
 
 <div class="app-container">
@@ -198,20 +206,20 @@ onDestroy(() => {
         {/if}
 
         {#if showJournal}
-        <div class="journal-container">
-            <div>
-                <textarea bind:this={preElement} class="journal-entry" bind:value={journalEntry} on:input={onInput} />
+            <div class="journal-container">
+                <div>
+                    <textarea bind:this={preElement} class="journal-entry" bind:value={journalEntry} on:input={onInput} />
+                </div>
             </div>
             <div class="button-count-container">
                 <div class="character-count">{journalEntry.length}/1000</div>
-                <!-- <button class="save-button" on:click={() => saveJournalEntry(document.querySelector('.journal-entry').textContent)}>Save</button> -->
-                <button class="save-button" on:click={saveJournalEntry}>Save</button>
-
+                <!-- <button class="edit-button" on:click={() => goto('/edit')}>Edit</button> -->
+                <!-- <button class="edit-button" on:click={() => goto(`/edit`)}>Edit</button> -->
+                <button class="edit-button" on:click={() => goto(`/edit/${selectedDate}`)}>Edit</button>
+                <!-- With this: -->
+                
             </div>
-        </div>
-        
-            
-        {/if}
+            {/if}
 
     </main>
 </div>
@@ -291,13 +299,12 @@ th {
 }
 
 .button-count-container {
-    position: absolute;
-    /* bottom: 10px; */
-    left: 10px;
     display: flex;
-    align-items: center;
+    justify-content: space-between;
     gap: 10px; /* space between the button and the character count */
+    width: 100%; /* fill the container */
 }
+
 
 .save-button {
     position: absolute;

@@ -1,5 +1,7 @@
 # from the top, we can generate text using a simple completion prompt
 # does this have contexT?
+# add inquirerpy and 
+
 
 import openai
 import os
